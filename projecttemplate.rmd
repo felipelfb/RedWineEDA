@@ -123,9 +123,21 @@ The X feature just represents the index of the observation on the data frame.
 On the summary it is possible to identify some initial trends on the data. For 
 example, there are some features that seem to have outliers on them, such as: 
 volatile acidity, citric acid, redisual sugar, chlorides, free sulfur dioxide, 
-total sulfur dioxide, and sulphates.
+total sulfur dioxide, and sulphates. Also, most of the wines are of average 
+quality (the 1st quartile border equals 5, the median equals 6 and the third 
+quartile border equals 6).
 
-Some visualization of the features can help to visualize that.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+table(redwine$quality)
+
+```
+
+Out of 1599 wines, 63 (~4%) are of quality 3 or 4, 1319 (~82.5%) are of quality 
+5 or 6 and 217 (~13,6%) are of quality 7 or 8.
+
+Histograms will help visualize distribution patterns for the other features
+as well.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -219,8 +231,8 @@ few examples of wine going up to 6.
 Also, most of the data is relatively normal, with the exception of citric acid.
 
 Let's transform some of the features using a log scale to try and get better 
-visualizations of them. Let's try residual sugar, chlorides, free sulfur 
-dioxide, total sulfur dioxide, and sulphates.
+visualizations of them. Suitable choices would be residual sugar, chlorides, 
+free sulfur dioxide, total sulfur dioxide, and sulphates.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -239,7 +251,7 @@ ggplot(data=redwine, aes(x=chlorides)) +
 
 ```
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data=redwine, aes(x=free.sulfur.dioxide)) +
   geom_histogram() +
@@ -247,7 +259,26 @@ ggplot(data=redwine, aes(x=free.sulfur.dioxide)) +
 
 ```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
+ggplot(data=redwine, aes(x=total.sulfur.dioxide)) +
+  geom_histogram() +
+  scale_x_log10()
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=sulphates)) +
+  geom_histogram() +
+  scale_x_log10()
+
+```
+
+
+With log transformation it is easier to identify patterns on these features. 
+With the exception of free sulfur dioxide, they all have normal-like 
+distributions.
 
 > **Tip**: Make sure that you leave a blank line between the start / end of
 each code block and the end / start of your Markdown text so that it is
@@ -263,17 +294,47 @@ gather your observations and add your own if you have other thoughts!
 
 ### What is the structure of your dataset?
 
+The dataset consists of 1599 observations of red wines with information about 
+11 physicochemical properties and 1 information about the quality of each wine. 
+The pyhisicochemial information was collected with experiments and the quality 
+of each wine is a mean of a value provided by different wine experts. All the 
+information is in the form of numbers.
+
+The quality values were given in a scale from 0 (very bad) to 10 (very 
+excellent). However, the majority of the wines have quality of 5 or 6. The 
+worst wine has a quality of 3. The best wine has a quality of 8.
+
+Some features are long-tailed. Examples are residual sugar, chlorides, free 
+sulfur dioxide, total sulfur dioxide, and sulphates.
+
+With a few exceptions, the features have a distribution close to normal.
+
 ### What is/are the main feature(s) of interest in your dataset?
+
+For the variance observed in some of these features and their nature in 
+relation to overall taste in wine, I would describe residual sugar, density, 
+and pH as features of interest. Of course, quality is the main focus of the 
+dataset, so it is also of interest.
 
 ### What other features in the dataset do you think will help support your \
 investigation into your feature(s) of interest?
 
+The acidity properties (fixed acidity, volatile acidity, and citric acid) could 
+support the information regarding pH. Alcohol is also a feature that could help 
+predict the quality of a wine.
+
 ### Did you create any new variables from existing variables in the dataset?
+
+I did not create any new variables from existing variables in the dataset.
 
 ### Of the features you investigated, were there any unusual distributions? \
 Did you perform any operations on the data to tidy, adjust, or change the form \
 of the data? If so, why did you do this?
 
+Some features (residual sugar, chlorides, free sulfur dioxide, total sulfur 
+dioxide, and sulphates) are long-tailed, so it is difficult to analyze their 
+distributions without any transformation. When adjusting them to a log 10 
+scale, they become easier to visualize.
 
 # Bivariate Plots Section
 
@@ -283,9 +344,201 @@ yourself to relationships between a main output feature and one of the
 supporting variables. Try to look at relationships between supporting variables
 as well.
 
+I've established some features of interest, but that was mainly done looking at 
+their distribution and common wine knowledge. It would be best to evaluate the 
+correlation between the features, to identify if the choices made are the best 
+ones or if there is some possible feature worth considering.
+
 ```{r echo=FALSE, Bivariate_Plots}
 
+cor(subset(redwine, select=-c(X)))
+
 ```
+
+Based on correlations, the best features to predict the quality of a wine are, 
+in order, alcohol, volatile acidity and sulphates. My initial intuition was 
+that residual sugar, density and pH would better describe the quality of a 
+wine, with alcohol and acidity features as possible features to look afterwards. 
+These initial findings show that there is more to the quality of a wine than 
+what common knowledge says.
+
+With the correlation knowledge, I'll try now to visualize the influence of 
+those features on the quality of the wines.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=alcohol, y=quality)) +
+  geom_point(stat="summary", fun.y=mean) +
+  geom_smooth()
+
+```
+
+The scatterplot suggests that as the percentage of alcohol increases so does 
+the overall quality of the wine, although around 12-13% seems to be an ideal 
+value.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(y=alcohol, x=as.factor(quality))) +
+  geom_boxplot() +
+  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  xlab("quality")
+
+```
+
+The boxplot also supports that theory. Wines with better quality have higher 
+median and higher mean (shown as red crosses).
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=volatile.acidity, y=quality)) +
+  geom_point(stat="summary", fun.y=mean) +
+  geom_smooth()
+
+```
+
+Volatile acidity is the opposite as alcohol: as it increases, the overall 
+quality of the wine decreases. Since the correlation found was around -0.39, 
+that was expected.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=as.factor(quality), y=volatile.acidity)) +
+  geom_boxplot() +
+  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  xlab("quality")
+
+```
+
+Again, the boxplots suggests the same and provide additional information. As 
+the level of volatile acidity decreases, the perceived quality of the wine 
+increases.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=sulphates, y=quality)) +
+  geom_point(stat="summary", fun.y=mean) +
+  geom_smooth() + 
+  scale_x_continuous(breaks=seq(0,2,0.1))
+
+```
+
+For sulphates, the scatterplot suggests that values around 0.75g/dm^3 and 
+0.95g/dm^3 represents the best wines.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=as.factor(quality), y=sulphates)) +
+  geom_boxplot() +
+  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  xlab("quality") +
+  geom_hline(yintercept=0.75, linetype="longdash", alpha=0.5) +
+  geom_hline(yintercept=0.95, linetype="longdash", alpha=0.5)
+
+```
+
+Following the best range for sulphates, established on the scatterplot, the 
+boxplot shows that qualities of 7 or 8 have close to 50% of their wines with 
+sulphates level on the specified range. Even though some qualities have some 
+outliers on the range, most of their observations are below 0.75g/dm^3 of 
+sulphates.
+
+By plotting these three features on scatterplots and boxplots against quality, 
+it is easier to visualize their influence on the quality of the wines.  
+
+Since citric acid is the fourth most correlated feature to quality and it has 
+some correlation with volatile acidity and sulphates, it is worth doing some 
+analysis on it.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(y=citric.acid, x=volatile.acidity)) +
+  geom_point(stat="summary", fun.y=mean) +
+  geom_smooth() +
+  scale_y_continuous(breaks=seq(-1,1,0.05))
+
+```
+
+The previous scatterplot between volatile acidity and quality suggested that 
+good wines tend to have lower volatile adicity. This scatterplot between 
+citric acid and volatile acidity shows that to obtain lower values of volatile 
+acidity, the wine should have at least 0.35g/dm^3. I'll try that value against 
+other features.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(y=citric.acid, x=sulphates)) +
+  geom_point(stat="summary", fun.y=mean) +
+  geom_smooth() +
+  scale_y_continuous(breaks=seq(0,1,0.05)) +
+  scale_x_continuous(breaks=seq(0.5,2,0.1)) +
+  geom_vline(xintercept=0.75, linetype="longdash", alpha=0.5) +
+  geom_vline(xintercept=0.95, linetype="longdash", alpha=0.5)
+
+```
+
+Since between 0.75 and 0.95 was the value range for sulphates on the best 
+wines, I've added lines on the scatterplot to help identify the values of 
+citric acid that fall on that range of sulphates. Again, 0.35g/dm^3 citric acid 
+falls on the range of interest.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(y=citric.acid, x=alcohol)) +
+  geom_point(stat="summary", fun.y=mean) +
+  geom_smooth() +
+  scale_y_continuous(breaks=seq(0,1,0.05)) +
+  scale_x_continuous(breaks=seq(0,15,1)) +
+  geom_vline(xintercept=12, linetype="longdash", alpha=0.5) +
+  geom_vline(xintercept=13, linetype="longdash", alpha=0.5)
+
+```
+
+For alcohol, the range of interest is between 12% and 13%. Citric acid for 
+those values are, on average, between 0.30g/dm^3 and 0.35g/dm^3.
+
+When evaluating the correlation between citric acid and these other three 
+features, it seems that 0.35g/dm^3 is the best value. Let's see if that holds 
+true when comparing that feature with quality.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=citric.acid, y=quality)) +
+  geom_point(stat="summary", fun.y=mean) +
+  geom_smooth() +
+  geom_vline(xintercept=0.35, linetype="longdash", alpha=0.5) +
+  scale_x_continuous(breaks=seq(0,1,0.05))
+
+```
+
+As suggested by the relationship between other variables, 0.35g/dm^3 of citric 
+acid indeed holds a good value of quality of the wine. However, the value is 
+not the only one associated with a good wine. Other values also are correlated with good wine. 
+Since the correlation between citric acid and quality was not very high 
+(~0.226), that was expected.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, aes(x=as.factor(quality), y=citric.acid)) +
+  geom_boxplot() +
+  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  geom_hline(yintercept=0.35, linetype="longdash", alpha=0.5) +
+  xlab("quality")
+
+```
+
+For the boxplot between citric acid and quality, we can see a clear different 
+between better wines (quality of 7 and 8) and the other ones. They tend to have 
+higher values of citric acid, as suggested in the previous scatterplot. The 
+value of 0.35 alone doesn't add much information on the boxplot though.
+
+Since density is a feature most commonly used when describing "the body" of the 
+wine, I'll do a similar analysis for it.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+```
+
 
 # Bivariate Analysis
 
@@ -295,6 +548,8 @@ here. Use the questions below to guide your discussion.
 ### Talk about some of the relationships you observed in this part of the \
 investigation. How did the feature(s) of interest vary with other features in \
 the dataset?
+
+
 
 ### Did you observe any interesting relationships between the other features \
 (not the main feature(s) of interest)?

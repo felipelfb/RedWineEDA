@@ -30,7 +30,7 @@ library(dplyr)
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-setwd("C:/Users/felipe/Documents/Udacity/ND Data Science/R/RedWineEDA")
+setwd("C:/Users/flfbarros/Documents/udacity/R/Red Wine Exploration")
 redwine <- read.csv("wineQualityReds.csv", sep=",")
 ```
 
@@ -631,7 +631,8 @@ the alcohol levels whilst also trying to decrease the density levels.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=volatile.acidity, y=sulphates, color=quality_factor)) +
+ggplot(data=redwine, 
+       aes(x=volatile.acidity, y=sulphates, color=quality_factor)) +
   geom_point(position=position_jitter(width=0.1, height=0.1)) +
   geom_smooth(method='lm', alpha=0)
 
@@ -672,10 +673,75 @@ use that value as a step to the cut. The buckets will be cut as follows:
 
 redwine$alcohol_level <- cut(redwine$alcohol, breaks=c(8,9.55,11.7,15))
 table(redwine$alcohol_level)
+
 ```
 
 The dataset is mostly of medium alcohol levels, based on the cut parameters. 
-However, there is a reasonable distribution for the other buckets.
+However, there is a reasonable number of observations for the other buckets.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, 
+       aes(x=sulphates, y=volatile.acidity, color=quality_factor)) +
+  geom_point() +
+  facet_wrap(~ alcohol_level) +
+  geom_smooth(method='lm', alpha=0) +
+  scale_x_continuous(limits=c(0, quantile(redwine$sulphates, 0.99))) +
+  scale_y_continuous(limits=c(0, quantile(redwine$volatile.acidity, 0.99)))
+
+```
+
+The top 1% for both axes were removed for this plot, in order to better 
+visualize it. Dividing the alcohol levels into buckets didn't seem to provide 
+much additional information. Since alcohol levels is highly correlated with the 
+quality of the wine, the lower bucket has much more bad wines than the medium 
+and high bucket.
+
+As a last exploration attempt, I'll try to also cut by density. Since the cut 
+by alcohol was not very sucessful, possibly because of the high correlation 
+with quality, the cut by density might give some insight.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+summary(redwine$density)
+
+```
+
+The variance in density levels is 0.0136. By diving in three equal steps, we've 
+got roughly 0.0045 for each step. However, the first step doesn't even surpass 
+the first quartile, and the second goes from there to beyond the third. That 
+would createa bucket with the majority of the observations. Looking to create 
+some more even buckets, I'll use the values from the first quartile, median 
+and third quartile.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+redwine$density_level <- cut(redwine$density, 
+                             breaks=c(0, 0.9956, 0.9978, 1.0038))
+table(redwine$density_level)
+
+```
+
+The distribution seems more balanced, even with the middle bucket with almost 
+double the number of observations. The buckets are represented in the following 
+manner:
+
+* Light wines: up to 0.996g/cm^3
+* Medium wines: higher than 0.996g/cm^3 and up to 0.998g/cm^3
+* Heavy wines: higher than 0.998g/cm^3
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data=redwine, 
+       aes(x=alcohol, y=volatile.acidity, color=quality_factor)) +
+  geom_point() +
+  facet_wrap(~ density_level) +
+  geom_smooth(method='lm', alpha=0) +
+  scale_y_continuous(limits=c(0.25, quantile(redwine$volatile.acidity, 0.99)))
+
+```
+
+
 
 # Multivariate Analysis
 

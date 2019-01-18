@@ -30,7 +30,7 @@ library(dplyr)
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-setwd("C:/Users/flfbarros/Documents/udacity/R/Red Wine Exploration")
+setwd("C:/Users/felipe/Documents/Udacity/ND Data Science/R/RedWineEDA")
 redwine <- read.csv("wineQualityReds.csv", sep=",")
 ```
 
@@ -645,6 +645,37 @@ purple, respectively) are oriented towards the northwest section of the graph.
 Of course a few outliers are present, but the majority of the wines of each 
 basket follow that behavior.
 
+So far, the only categorical feature in the dataset was quality, that was 
+reduced into buckets. I've noticed that having almost all the variables with 
+continuous values might conceal some interesting information. For example, is 
+there a difference in how the density affects the quality of the wine in 
+different levels of alcohol?
+
+I'll bucket wines by alcohol levels and investigate some more.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+summary(redwine$alcohol)
+
+```
+
+A reminder of the summary for alcohol values on the dataset. The value range is 
+of 6.5 (14.9 minues 8.4). By dividing alcohol levels into three buckets, that 
+would imply in a step of around 2.16 for each bucket. I'll round it to 2.15 and 
+use that value as a step to the cut. The buckets will be cut as follows:
+
+* Low alcohol level: over 8.4% or under or equal to 9.55%
+* Medium alcohol level: over 9.55% or under or equal to 11.7%
+* High alcohol level: over 11.7%
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+redwine$alcohol_level <- cut(redwine$alcohol, breaks=c(8,9.55,11.7,15))
+table(redwine$alcohol_level)
+```
+
+The dataset is mostly of medium alcohol levels, based on the cut parameters. 
+However, there is a reasonable distribution for the other buckets.
 
 # Multivariate Analysis
 

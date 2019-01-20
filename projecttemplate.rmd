@@ -1,15 +1,6 @@
 RED WINE QUALITY EXPLORATION by FELIPE BARROS
 ========================================================
 
-> **Tip**: You will see quoted sections like this throughout the template to
-help you construct your report. Make sure that you remove these notes before
-you finish and submit your project!
-
-> **Tip**: One of the requirements of this project is that your code follows
-good formatting techniques, including limiting your lines to 80 characters or
-less. If you're using RStudio, go into Preferences \> Code \> Display to set up
-a margin line to help you keep track of this guideline!
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load all of the packages that you end up using in your analysis in this code
 # chunk.
@@ -30,13 +21,9 @@ library(dplyr)
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-setwd("C:/Users/flfbarros/Documents/udacity/R/Red Wine Exploration")
-redwine <- read.csv("wineQualityReds.csv", sep=",")
+setwd("C:/Users/felipe/Documents/udacity/nd data science/R/RedWineEDA")
+redwine <- read.csv("wineQualityReds.csv", sep = ",")
 ```
-
-> **Tip**: Before you create any plots, it is a good idea to provide a short
-introduction into the dataset that you are planning to explore. Replace this
-quoted text with that general information!
 
 This dataset is one of the datasets created on the paper "Modeling wine 
 preferences by data mining from physicochemical properties" [Cortez et al., 
@@ -98,13 +85,6 @@ acidic) to 14 (very basic); most wines are between 3-4 on the pH scale
 
 # Univariate Plots Section
 
-> **Tip**: In this section, you should perform some preliminary exploration of
-your dataset. Run some summaries of the data and create univariate plots to
-understand the structure of the individual variables in your dataset. Don't
-forget to add a comment after each plot or closely-related group of plots!
-There should be multiple code chunks and text sections; the first one below is
-just to help you get started.
-
 ```{r echo=FALSE, message=FALSE}
 
 str(redwine)
@@ -114,7 +94,7 @@ str(redwine)
 
 ```{r echo=FALSE, Univariate_Plots}
 
-summary(subset(redwine, select=-c(X)))
+summary(subset(redwine, select = -c(X)))
 
 ```
 
@@ -142,84 +122,84 @@ as well.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=quality)) +
+ggplot(data = redwine, aes(x = quality)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=fixed.acidity)) +
+ggplot(data = redwine, aes(x = fixed.acidity)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=volatile.acidity)) +
+ggplot(data = redwine, aes(x = volatile.acidity)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=citric.acid)) +
+ggplot(data = redwine, aes(x = citric.acid)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=residual.sugar)) +
+ggplot(data = redwine, aes(x = residual.sugar)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=chlorides)) +
+ggplot(data = redwine, aes(x = chlorides)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=free.sulfur.dioxide)) +
+ggplot(data = redwine, aes(x = free.sulfur.dioxide)) +
   geom_histogram()
 
 ```
 
 ```{r  echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=total.sulfur.dioxide)) +
+ggplot(data = redwine, aes(x = total.sulfur.dioxide)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=density)) +
+ggplot(data = redwine, aes(x = density)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=pH)) +
+ggplot(data = redwine, aes(x = pH)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=sulphates)) +
+ggplot(data = redwine, aes(x = sulphates)) +
   geom_histogram()
 
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=alcohol)) +
+ggplot(data = redwine, aes(x = alcohol)) +
   geom_histogram()
 
 ```
@@ -237,7 +217,7 @@ free sulfur dioxide, total sulfur dioxide, and sulphates.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=residual.sugar)) +
+ggplot(data = redwine, aes(x = residual.sugar)) +
   geom_histogram() +
   scale_x_log10()
 
@@ -246,7 +226,7 @@ ggplot(data=redwine, aes(x=residual.sugar)) +
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=chlorides)) +
+ggplot(data=redwine, aes(x = chlorides)) +
   geom_histogram() +
   scale_x_log10()
 
@@ -254,7 +234,7 @@ ggplot(data=redwine, aes(x=chlorides)) +
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=free.sulfur.dioxide)) +
+ggplot(data = redwine, aes(x = free.sulfur.dioxide)) +
   geom_histogram() +
   scale_x_log10()
 
@@ -262,7 +242,7 @@ ggplot(data=redwine, aes(x=free.sulfur.dioxide)) +
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=total.sulfur.dioxide)) +
+ggplot(data = redwine, aes(x = total.sulfur.dioxide)) +
   geom_histogram() +
   scale_x_log10()
 
@@ -270,7 +250,7 @@ ggplot(data=redwine, aes(x=total.sulfur.dioxide)) +
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=sulphates)) +
+ggplot(data = redwine, aes(x = sulphates)) +
   geom_histogram() +
   scale_x_log10()
 
@@ -281,19 +261,7 @@ With log transformation it is easier to identify patterns on these features.
 With the exception of free sulfur dioxide, they all have normal-like 
 distributions.
 
-> **Tip**: Make sure that you leave a blank line between the start / end of
-each code block and the end / start of your Markdown text so that it is
-formatted nicely in the knitted text. Note as well that text on consecutive
-lines is treated as a single space. Make sure you have a blank line between
-your paragraphs so that they too are formatted for easy readability.
-
 # Univariate Analysis
-
-> **Tip**: Now that you've completed your univariate explorations, it's time to
-reflect on and summarize what you've found. Use the questions below to help you
-gather your observations and add your own if you have other thoughts!
-
-### What is the structure of your dataset?
 
 The dataset consists of 1599 observations of red wines with information about 
 11 physicochemical properties and 1 information about the quality of each wine. 
@@ -310,38 +278,17 @@ sulfur dioxide, total sulfur dioxide, and sulphates.
 
 With a few exceptions, the features have a distribution close to normal.
 
-### What is/are the main feature(s) of interest in your dataset?
-
 Since quality is the output feature of the study that generated this dataset, 
 the feature is undoubtly the main feature of interest.
-
-### What other features in the dataset do you think will help support your \
-investigation into your feature(s) of interest?
 
 For the variance observed in some of these features and their nature in 
 relation to overall taste in wine, I would describe residual sugar, density and 
 pH as features of interest.
 
-### Did you create any new variables from existing variables in the dataset?
-
-I did not create any new variables from existing variables in the dataset.
-
-### Of the features you investigated, were there any unusual distributions? \
-Did you perform any operations on the data to tidy, adjust, or change the form \
-of the data? If so, why did you do this?
-
-Some features (residual sugar, chlorides, free sulfur dioxide, total sulfur 
-dioxide, and sulphates) are long-tailed, so it is difficult to analyze their 
-distributions without any transformation. When adjusting them to a log 10 
-scale, they become easier to visualize.
+So far, I did not create any new variables from existing variables in the 
+dataset.
 
 # Bivariate Plots Section
-
-> **Tip**: Based on what you saw in the univariate plots, what relationships
-between variables might be interesting to look at in this section? Don't limit
-yourself to relationships between a main output feature and one of the
-supporting variables. Try to look at relationships between supporting variables
-as well.
 
 I've established some features of interest, but that was mainly done looking at 
 their distribution and common wine knowledge. It would be best to evaluate the 
@@ -350,7 +297,7 @@ ones or if there is some possible feature worth considering.
 
 ```{r echo=FALSE, Bivariate_Plots}
 
-cor(subset(redwine, select=-c(X)))
+cor(subset(redwine, select = -c(X)))
 
 ```
 
@@ -366,8 +313,8 @@ those features on the quality of the wines.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(y=alcohol, x=quality)) +
-  geom_point(position=position_jitter(width=0.2, height=0.2)) +
+ggplot(data = redwine, aes(y = alcohol, x = quality)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.2)) +
   geom_smooth(method='lm')
 
 ```
@@ -380,9 +327,9 @@ regression line on quality 5.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(y=alcohol, x=as.factor(quality))) +
+ggplot(data = redwine, aes(y = alcohol, x = as.factor(quality))) +
   geom_boxplot() +
-  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
   xlab("quality")
 
 ```
@@ -392,8 +339,8 @@ median and higher mean (shown as red crosses).
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=volatile.acidity, y=quality)) +
-  geom_point(position=position_jitter(width=0.2, height=0.2)) +
+ggplot(data = redwine, aes(y = volatile.acidity, x = quality)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1)) +
   geom_smooth(method='lm')
 
 ```
@@ -404,9 +351,9 @@ quality of the wine decreases. Since the correlation found was negative
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=as.factor(quality), y=volatile.acidity)) +
+ggplot(data = redwine, aes(x = as.factor(quality), y = volatile.acidity)) +
   geom_boxplot() +
-  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
   xlab("quality")
 
 ```
@@ -417,20 +364,22 @@ the perceived quality of the wine increases.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(y=sulphates, x=quality)) +
-  geom_point(position=position_jitter(width=0.2, height=0.1)) +
-  geom_smooth(method='lm')
+ggplot(data = redwine, aes(y = sulphates, x = quality)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.05)) +
+  geom_smooth(method = 'lm') +
+  scale_y_continuous(limits = c(0.25, quantile(redwine$sulphates, 0.99)))
 
 ```
 
-For sulphates, the scatterplot has a behavior similar to alcohol: better 
-quality wines have higher levels of sulphates.
+The top 1% for sulphates was removed for better visualization. For sulphates, 
+the scatterplot has a behavior similar to alcohol: better quality wines have 
+higher levels of sulphates.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=as.factor(quality), y=sulphates)) +
+ggplot(data = redwine, aes(x = as.factor(quality), y = sulphates)) +
   geom_boxplot() +
-  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
   xlab("quality")
 
 ```
@@ -448,9 +397,9 @@ doing some analysis on it.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(y=citric.acid, x=quality)) +
-  geom_point(position = position_jitter(width=0.2, height=0.1)) +
-  geom_smooth(method='lm')
+ggplot(data = redwine, aes(y = citric.acid, x = quality)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.1)) +
+  geom_smooth(method = 'lm')
 
 ```
 
@@ -461,9 +410,9 @@ levels of citric acid.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=as.factor(quality), y=citric.acid)) +
+ggplot(data = redwine, aes(x = as.factor(quality), y = citric.acid)) +
   geom_boxplot() +
-  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
   xlab("quality")
 
 ```
@@ -478,22 +427,24 @@ wine, I'll do a similar analysis for it.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=quality, y=density)) +
-  geom_point(position=position_jitter(width=0.2, height=0.01)) +
-  geom_smooth(method='lm')
+ggplot(data = redwine, aes(x = quality, y = density)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.01)) +
+  geom_smooth(method = 'lm') +
+  scale_y_continuous(limits = c(0.99, quantile(redwine$density, 0.99)))
 
 ```
 
-Since the correlation between these features is very low (around -0.17), the 
-influence of density on the quality of the wine is barely noticeable. It seems 
+The top 1% for density was removed for better visualization. Since the 
+correlation between these features is very low (around -0.17), the influence of 
+density on the quality of the wine is lower than previous features. It seems 
 that using density to evaluate the quality of a wine (a common practice of 
 non-experts) is not the best approach.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=as.factor(quality), y=density)) +
+ggplot(data = redwine, aes(x = as.factor(quality), y = density)) +
   geom_boxplot() +
-  stat_summary(fun.y="mean", geom="point", shape=3, color="red") +
+  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
   xlab("quality")
 
 ```
@@ -504,13 +455,6 @@ of 7 and 8. For the other quality levels, there doesn't seem to be a
 significant difference.
 
 # Bivariate Analysis
-
-> **Tip**: As before, summarize what you found in your bivariate explorations
-here. Use the questions below to guide your discussion.
-
-### Talk about some of the relationships you observed in this part of the \
-investigation. How did the feature(s) of interest vary with other features in \
-the dataset?
 
 I've investigated the relationships between quality and alcohol, volatile 
 acidity, sulphates, citric acid and density. In terms of correlation with 
@@ -541,14 +485,9 @@ feature on the quality of the wine, that influence is only noteworthy on the
 best wines on the dataset (7 or above). Those wines tend to have a lower 
 density value.
 
-### Did you observe any interesting relationships between the other features \
-(not the main feature(s) of interest)?
-
 Features related to acidity naturally seem to be correlated with each other. 
 Examples are fixed acidity, volatile acidity, citric acid and pH. Density also 
 seems to be related with those features, along with residual sugar and alcohol.
-
-### What was the strongest relationship you found?
 
 The strongest relationship found was between fixed acidity and pH, with a 
 factor of 0.683. That is not a surprising relationship, as one feature (pH) is 
@@ -556,95 +495,84 @@ evaluated based on properties of the other (acidity).
 
 # Multivariate Plots Section
 
-> **Tip**: Now it's time to put everything together. Based on what you found in
-the bivariate plots section, create a few multivariate plots to investigate
-more complex interactions between variables. Make sure that the plots that you
-create here are justified by the plots you explored in the previous section. If
-you plan on creating any mathematical models, this is the section where you
-will do that.
-
 To help visualization for the next plots, I'll divide the wines on baskets, 
 based on their quality. The baskets are:
 
-* Wines with quality below 5
-* Wines with quality exactly 5
-* Wines with quality exactly 6
-* Wines with quality above 6
+* Bad: 4 or lower quality
+* Average: 5 quality
+* Good: 6 quality
+* Best: 7 or over quality
 
 The choice of breaks for the baskets are based on the fact that most 
 observations on the dataset have quality of 5 or 6.
 
-```{r echo=FALSE, Multivariate_Plots}
+```{r echo=FALSE, warning=FALSE, message=FALSE, Multivariate_Plots}
 
-redwine$quality_factor <- cut(redwine$quality, breaks=c(0,4,5,6,10))
+redwine$quality_factor <- cut(redwine$quality, breaks = c(0,4,5,6,10), 
+                              labels = c("Bad", "Average", "Good", "Best"))
 
 ```
 
-```{r echo=FALSE, Multivariate_Plots}
+```{r echo=FALSE, warning=FALSE, message=FALSE}
 
 table(redwine$quality_factor)
 
 ```
 
-By reducing quality factor levels from 6 (3-8) to 4, visualization on the next 
-plots is made clearer.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-```{r echo=FALSE, Multivariate_Plots}
-
-ggplot(data=redwine, aes(x=alcohol, y=volatile.acidity, 
-                         color=quality_factor)) +
-  geom_point(position=position_jitter(width=0.2, height=0.1), alpha=1/3) +
-  geom_smooth(method='lm', alpha=0) +
-  scale_y_continuous(breaks=seq(0,1.5,0.1))
+ggplot(data = redwine, aes(x = alcohol, y = volatile.acidity, 
+                         color = quality_factor)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.01)) +
+  scale_y_continuous(breaks = seq(0,1.5,0.1), 
+                     limits = c(0, quantile(redwine$volatile.acidity, 0.99))) +
+  geom_vline(xintercept = median(redwine$alcohol), linetype = "longdash") +
+  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "dashed")
 
 ```
 
-This plot reveal a lot of information. It was already known by previous 
-plots that better wines have lower volatile acidity levels. Not only this plot 
-corroborate that, it also correlates that with the information that better 
-wines tend to have higher alcohol levels. The worst wines (red line) not only 
-have the highest mean value for volatile acidity (being above the rest of the 
-lines), they also tend to increase volatile acidity as they increase alcohol 
-levels. It seems that, as they try to solve one issue (by increasing alcohol 
-levels), they create another (by increasing volatile acidity levels). Wines 
-from other quality baskets tend to maintain or lower their acidity levels when 
-increasing the alcohol levels, with the exception of the higher quality basket, 
-that increased the volatile acidity by a minor margin when increasing their 
-alcohol levels.
+The top 1% values for volatile acidity were removed on this plot. The vertical 
+and horizontal lines are the medians for alcohol and volatile acidity, 
+respectively. By using both lines, the graph is divided into four quadrants. 
+We can see how alcohol has a higher influence in the quality factor as most of 
+red and green dots (bad and average wines) are on the second or third 
+quadrants, where alcohol levels are lower. The first quadrant has a good number 
+of good wines but also has some presence of bad and average wines. The fourth 
+quadrant, where alcohol is high and volatile acidity is low is the best 
+quadrant, as expected: most purple dots (best wines) are present there.
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, aes(x=alcohol, y=density, color=quality_factor)) +
-  geom_point(position=position_jitter(width=0.2, height=0.005)) +
-  geom_smooth(method='lm', alpha=0)
+ggplot(data = redwine, aes(x = alcohol, y = density, color = quality_factor)) +
+  geom_point(position = position_jitter(width = 0.2, height = 0.0025)) +
+  geom_hline(yintercept = median(redwine$density), linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$alcohol), linetype = "longdash")
 
 ```
 
-When trying to do the same with alcohol, density and quality factor, it is 
-possible to see a even more distinct pattern. Wines with less alcohol tend to 
-be more dense. Previous plots showed that higher levels of alcohol and lower 
-levels of density were correlated with better quality of the wine. This plot 
-suggests that all the baskets of quality follow the trend of trying to increase 
-the alcohol levels whilst also trying to decrease the density levels.
+By swaping volatile acidity for density on the y-axis, the pattern is similar, 
+but with even more bias towards the x-axis (alcohol). The vertical line (the 
+median for alcohol) seems to be the only one dividing most of the good ones 
+from the bad ones. This again goes against common knowledge that density is 
+a good feature for telling the quality of a wine.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, 
-       aes(x=volatile.acidity, y=sulphates, color=quality_factor)) +
-  geom_point(position=position_jitter(width=0.1, height=0.1)) +
-  geom_smooth(method='lm', alpha=0)
+ggplot(data = redwine,
+       aes(x = volatile.acidity, y = sulphates, color = quality_factor)) +
+  geom_point(position = position_jitter(width = 0.01, height = 0.01)) +
+  scale_y_continuous(limits = c(0.25, quantile(redwine$sulphates, 0.99))) +
+  scale_x_continuous(limits = c(0.1, quantile(redwine$volatile.acidity, 0.99))) +
+  geom_hline(yintercept = median(redwine$sulphates), linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$volatile.acidity), linetype = "longdash")
 
 ```
 
-This is a very good plot to demonstrate how these features influence the 
-quality of a wine. There are two very distinct masses demonstrated here. The 
-bad and average wines (red and green, respectively) are oriented towards the 
-southeast section of the graph. The above average and good wines (blue and 
-purple, respectively) are oriented towards the northwest section of the graph. 
-Of course a few outliers are present, but the majority of the wines of each 
-basket follow that behavior.
+This plot also has a difference between the quadrants. In this case, the second 
+quadrant (high sulphates and low volatile acidity) is where most of the best 
+wines (purple dots) are.
 
 So far, the only categorical feature in the dataset was quality, that was 
 reduced into buckets. I've noticed that having almost all the variables with 
@@ -671,7 +599,10 @@ use that value as a step to the cut. The buckets will be cut as follows:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-redwine$alcohol_level <- cut(redwine$alcohol, breaks=c(8,9.55,11.7,15))
+redwine$alcohol_level <- cut(redwine$alcohol, breaks = c(8,9.55,11.7,15), 
+                             labels = c("Low Alcohol",
+                                        "Medium Alcohol",
+                                        "High Alcohol"))
 table(redwine$alcohol_level)
 
 ```
@@ -681,25 +612,28 @@ However, there is a reasonable number of observations for the other buckets.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, 
-       aes(x=sulphates, y=volatile.acidity, color=quality_factor)) +
+ggplot(data = redwine, 
+       aes(x = sulphates, y = volatile.acidity, color = quality_factor)) +
   geom_point() +
   facet_wrap(~ alcohol_level) +
-  geom_smooth(method='lm', alpha=0) +
-  scale_x_continuous(limits=c(0, quantile(redwine$sulphates, 0.99))) +
-  scale_y_continuous(limits=c(0, quantile(redwine$volatile.acidity, 0.99)))
+  scale_x_continuous(limits = c(0.25, quantile(redwine$sulphates, 0.99))) +
+  scale_y_continuous(limits = c(0.125, quantile(redwine$volatile.acidity, 0.99))) +
+  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$sulphates), linetype = "longdash")
 
 ```
 
 The top 1% for both axes were removed for this plot, in order to better 
-visualize it. Dividing the alcohol levels into buckets didn't seem to provide 
-much additional information. Since alcohol levels is highly correlated with the 
-quality of the wine, the lower bucket has much more bad wines than the medium 
-and high bucket.
+visualize it. By dividing the alcohol levels into buckets, we can see not only 
+how the quality of the wines are distributed in the buckets but also the
+distrubution of sulphates and volatile acidity. The high alcohol bucket has 
+almost only good and best wines and most of the observations are on the fourth 
+quadrant. On the opposite side, the low alcohol bucket has almost only average 
+wines and most of the observations are on the second and third quadrants. The 
+plot depicts at the same time the influence of the three features most 
+impactful on the quality of a wine.
 
-As a last exploration attempt, I'll try to also cut by density. Since the cut 
-by alcohol was not very sucessful, possibly because of the high correlation 
-with quality, the cut by density might give some insight.
+As a last exploration attempt, I'll try to also cut by density.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -710,93 +644,171 @@ summary(redwine$density)
 The variance in density levels is 0.0136. By diving in three equal steps, we've 
 got roughly 0.0045 for each step. However, the first step doesn't even surpass 
 the first quartile, and the second goes from there to beyond the third. That 
-would createa bucket with the majority of the observations. Looking to create 
-some more even buckets, I'll use the values from the first quartile, median 
-and third quartile.
+would create a bucket with the majority of the observations. Looking to create 
+more even buckets, I'll use the values from the first quartile, median and 
+third quartile.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 redwine$density_level <- cut(redwine$density, 
-                             breaks=c(0, 0.9956, 0.9978, 1.0038))
+                             breaks = c(0, 0.9956, 0.9978, 1.0038), 
+                             labels = c("Light", "Medium", "Heavy"))
 table(redwine$density_level)
 
 ```
 
 The distribution seems more balanced, even with the middle bucket with almost 
-double the number of observations. The buckets are represented in the following 
-manner:
+double the number of observations of the other buckets. The buckets are 
+represented in the following manner:
 
-* Light wines: up to 0.996g/cm^3
-* Medium wines: higher than 0.996g/cm^3 and up to 0.998g/cm^3
-* Heavy wines: higher than 0.998g/cm^3
+* Light wines: up to 0.9956g/cm^3
+* Medium wines: higher than 0.9956g/cm^3 and up to 0.9978g/cm^3
+* Heavy wines: higher than 0.9978g/cm^3
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data=redwine, 
-       aes(x=alcohol, y=volatile.acidity, color=quality_factor)) +
+ggplot(data = redwine, 
+       aes(x = alcohol, y = volatile.acidity, color = quality_factor)) +
   geom_point() +
   facet_wrap(~ density_level) +
-  geom_smooth(method='lm', alpha=0) +
-  scale_y_continuous(limits=c(0.25, quantile(redwine$volatile.acidity, 0.99)))
+  scale_y_continuous(limits = c(0.25, quantile(redwine$volatile.acidity, 0.99))) +
+  geom_vline(xintercept = median(redwine$alcohol), linetype = "longdash") +
+  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "longdash")
 
 ```
 
-
+Lower density levels are correlated with better wine. In the low density 
+bucket, most of the wines are good or best, as expected. They also are higher
+on alcohol levels. The medium density bucket is a surprise, as it has a more 
+dense cloud of average wines than the high density bucket.
 
 # Multivariate Analysis
 
-### Talk about some of the relationships you observed in this part of the \
-investigation. Were there features that strengthened each other in terms of \
-looking at your feature(s) of interest?
+By looking simultaneously at several features and their relationship with 
+quality, it was possible to see how each other contribute to the quality of the 
+wine. Since the three best features to try to predict the quality of the wine 
+are alcohol, volatile acidity and sulphates, creating a plot with the 
+relationship between them and quality efficiently described the properties of 
+a good wine.
 
-### Were there any interesting or surprising interactions between features?
+To improve the analysis, I decided to divide alcohol and density into buckets. 
+That allowed me to visualize multiple features interacting with each other at 
+the same time.
 
-### OPTIONAL: Did you create any models with your dataset? Discuss the \
-strengths and limitations of your model.
+A surprising interaction was found when density values were cut into buckets. 
+Even though a linear regression model suggests that low density levels are 
+correlated with better wine, the middle bucket seemed worst than the heavy 
+bucket.
 
 ------
 
 # Final Plots and Summary
 
-> **Tip**: You've done a lot of exploration and have built up an understanding
-of the structure of and relationships between the variables in your dataset.
-Here, you will select three plots from all of your previous exploration to
-present here as a summary of some of your most interesting findings. Make sure
-that you have refined your selected plots for good titling, axis labels (with
-units), and good aesthetic choices (e.g. color, transparency). After each plot,
-make sure you justify why you chose each plot by describing what it shows.
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_One}
 
-### Plot One
-```{r echo=FALSE, Plot_One}
-
-```
-
-### Description One
-
-
-### Plot Two
-```{r echo=FALSE, Plot_Two}
+ggplot(data = redwine, 
+       aes(x = sulphates, y = volatile.acidity, color = quality_factor)) +
+  geom_point() +
+  facet_wrap(~ alcohol_level) +
+  scale_x_continuous(limits = c(0.25, quantile(redwine$sulphates, 0.99))) +
+  scale_y_continuous(limits = c(0.125, quantile(redwine$volatile.acidity, 0.99))) +
+  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$sulphates), linetype = "longdash") +
+  labs(title = "Quality of a Wine, based on Acetic Acid, Potassium Sulphate and Alcohol", 
+       color = "Quality", 
+       subtitle = "Low Alcohol: up to 9.55%; Medium Alcohol: over 9.55% and up to 11.7%; High Alcohol: over 11.7%") +
+  ylab("Acetic Acid (g/dm^3)") +
+  xlab("Potassium Sulphate (g/dm^3)")
 
 ```
 
-### Description Two
+This is the best plot to represent the dataset. We can see how alcohol heavily 
+influences the quality of the wine by the difference of observations on each 
+bucket. The median lines for Acetic Acid and Potassium Sulphate also help to 
+illustrate how these features work in relation to the quality of the wine. More 
+acetic acid gives a vinegar taste to the wine, so most wines above the 
+horizontal line are Bad or Average. Potassium Sulphate helps with antimicrobial 
+and antioxidant effects on wine, giving them an overall better quality. Because 
+of that, wines on the right of the vertical line are more likely to be Good or 
+Best.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Two}
 
-### Plot Three
-```{r echo=FALSE, Plot_Three}
+ggplot(data=redwine, 
+       aes(x=alcohol, y=volatile.acidity, color=quality_factor)) +
+  geom_point() +
+  facet_wrap(~ density_level) +
+  scale_y_continuous(limits=c(0.25, quantile(redwine$volatile.acidity, 0.99))) +
+  geom_vline(xintercept=median(redwine$alcohol), linetype="longdash") +
+  geom_hline(yintercept=median(redwine$volatile.acidity), linetype="longdash") +
+  labs(title="Quality of a Wine based on Acetic Acid, Alcohol and Density", 
+       subtitle="Light: up to 0.9956g/dm^3; Medium: over 0.9956 and up to 0.9978g/dm^3; Heavy: over 0.9978g/dm^3", color="Quality") +
+  xlab("Alcohol (%)") +
+  ylab("Acetic Acid (g/dm^3)")
 
 ```
 
-### Description Three
+The second plot I've chosen to describe the data is the one above. The reason 
+I've chosen it is because most people (myself included) are not experts on 
+wine, and most of them believe that the density of the wine is somehow related 
+to its quality. Although that is true, density has a positive correlation with 
+the quality of the wine, the influence of density on the quality is low. 
+Lighter wines are more likely to be Good or Best, but Medium and Heavy wines 
+are more or less the same on that regard.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Three}
+
+ggplot(data = redwine, aes(y = alcohol, x = as.factor(quality))) +
+  geom_boxplot() +
+  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
+  xlab("Quality") +
+  labs(title = "Variance of Alcohol Levels by Quality of the Wine", 
+       subtitle = "Crosses represent mean values") +
+  ylab("Alcohol (%)")
+
+```
+
+These boxplots are a great description of the most influential feature on 
+regarding to the quality of a wine: alcohol. With the strongest correlation 
+with quality, variance in the levels of alcohol between wines is what best 
+separates the worst wines from the best ones.
 
 ------
 
 # Reflection
 
-> **Tip**: Here's the final step! Reflect on the exploration you performed and
-the insights you found. What were some of the struggles that you went through?
-What went well? What was surprising? Make sure you include an insight into
-future work that could be done with the dataset.
+This was my first solo attempt at an Exploratory Data Analysis. The data used 
+consisted of physicochemical properties and quality of wines. Since my 
+knowledge of wine was close to none, I as mostly looking at the data without 
+much assumptions. The only thing that I thought I knew was that people use 
+the density of the wine to describe its "body", and that might be related to 
+its quality.
 
-> **Tip**: Don't forget to remove this, and the other **Tip** sections before
-saving your final work and knitting the final report!
+As I went along with the exploration, I've discovered what features are more 
+correlated with quality and if that correlation was positive or negative. I was 
+surprised to discover that density was correlated, but not much. I had only one 
+assumption and it turned out to be false!
+
+The multivariate analysis was not easy to perform. Some of my first plots were 
+not describing the data correctly, I used features on wrong axes, was not 
+taking much out of them. Then, I decided to include the vertical and horizontal 
+lines for the median values for each axis. After that, the information was 
+clearer and the analysis was easier to make.
+
+I've encountered two problems while doing this exploration. The first was that 
+quality was the only naturally categorical feature. That limited my analysis 
+at first, but I tried to go around that by creating two categorical features, 
+derived from original features on the dataset. I think that, because of that, 
+I was able to go further on my analysis. The second problem was the natural 
+distribution of the data: most wines were of quality 5 or 6, with none below 3 
+or above 8. That was not a problem I could solve in any way I can think of. 
+It wasn't even a big problem, but it is necessary to address the results from 
+this analysis with caution, as it could not be a good representation for other 
+datasets of red wines.
+
+Going further, some chemistry background knowledge could prove useful on trying 
+to create more derived features. Maybe there is a relationship between the 
+features on the dataset that I am not aware of. In reality, I've reserved most 
+of the investigation to the three most correlated features and density (to 
+address my only assumption). There could be much more hidden in the data I'm 
+simply not yet experienced enough to unveil.

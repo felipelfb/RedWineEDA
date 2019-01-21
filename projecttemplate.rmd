@@ -17,11 +17,12 @@ RED WINE QUALITY EXPLORATION by FELIPE BARROS
 library(ggplot2)
 library(gridExtra)
 library(dplyr)
+library(RColorBrewer)
 ```
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-setwd("C:/Users/felipe/Documents/udacity/nd data science/R/RedWineEDA")
+setwd("C:/Users/flfbarros/Documents/udacity//R/Red Wine Exploration")
 redwine <- read.csv("wineQualityReds.csv", sep = ",")
 ```
 
@@ -261,6 +262,100 @@ With log transformation it is easier to identify patterns on these features.
 With the exception of free sulfur dioxide, they all have normal-like 
 distributions.
 
+For some of the features it might be useful to divide them into buckets. For 
+quality, reducing the various possible values into buckets helps plot 
+visualization and understanding how the values fare against each other.
+Features like alcohol and density can naturally describe properties of the 
+wines in a easy to understand way (e.g. lighter, more alcoholic, etc.). The 
+three features will be divided into buckets and be used in both ways 
+(continuous and categorical) onwards.
+
+For quality, the baskets are:
+
+* Bad: 4 or lower quality
+* Average: 5 quality
+* Good: 6 quality
+* Best: 7 or over quality
+
+The choice of breaks for the baskets are based on the fact that most 
+observations on the dataset have quality of 5 or 6.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+redwine$quality_factor <- cut(redwine$quality, breaks = c(0,4,5,6,10), 
+                              labels = c("Bad", "Average", "Good", "Best"))
+
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+ggplot(data = redwine, aes(x = quality_factor)) +
+  geom_bar()
+
+```
+
+Since most of the wines have quality of 5 or 6, most of them are being 
+described here as "Average" or "Good", with a good ammount of "Best".
+
+The value range for alcohol is of 6.5 (14.9 minus 8.4). By dividing alcohol 
+levels into three buckets, that would imply in a step of around 2.16 for each 
+bucket. I'll round it to 2.15 and use that value as a step to the cut. The 
+buckets will be cut as follows:
+
+* Low alcohol level: over 8.4% or under or equal to 9.55%
+* Medium alcohol level: over 9.55% or under or equal to 11.7%
+* High alcohol level: over 11.7%
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+redwine$alcohol_level <- cut(redwine$alcohol, breaks = c(8,9.55,11.7,15), 
+                             labels = c("Low Alcohol",
+                                        "Medium Alcohol",
+                                        "High Alcohol"))
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data = redwine, aes(x = alcohol_level)) +
+  geom_bar()
+
+```
+
+Most wines are bucketed into Medium Alcohol, followed by Low Alcohol and 
+High Alcohol. Although there is a big difference in the number of observations 
+between the buckets, they all have a reasonable number to investigate.
+
+The variance in density levels is 0.0136. By diving in three equal steps, we've 
+got roughly 0.0045 for each step. However, the first step doesn't even surpass 
+the first quartile, and the second goes from there to beyond the third. That 
+would create a bucket with the majority of the observations. Looking to create 
+more even buckets, I'll use the values from the first quartile, median and 
+third quartile.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+redwine$density_level <- cut(redwine$density, 
+                             breaks = c(0, 0.9956, 0.9978, 1.0038), 
+                             labels = c("Light", "Medium", "Heavy"))
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+ggplot(data = redwine, aes(x = density_level)) +
+  geom_bar()
+
+```
+
+The distribution seems more balanced, even with the middle bucket with almost 
+double the number of observations of the other buckets. The buckets are 
+represented in the following manner:
+
+* Light wines: up to 0.9956g/cm^3
+* Medium wines: higher than 0.9956g/cm^3 and up to 0.9978g/cm^3
+* Heavy wines: higher than 0.9978g/cm^3
+
 # Univariate Analysis
 
 The dataset consists of 1599 observations of red wines with information about 
@@ -328,8 +423,13 @@ regression line on quality 5.
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, aes(y = alcohol, x = as.factor(quality))) +
-  geom_boxplot() +
-  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  stat_summary(fun.y = "mean", 
+               geom = "point", 
+               shape = 3, 
+               color = "red", 
+               size = 4) +
   xlab("quality")
 
 ```
@@ -352,8 +452,13 @@ quality of the wine decreases. Since the correlation found was negative
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, aes(x = as.factor(quality), y = volatile.acidity)) +
-  geom_boxplot() +
-  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  stat_summary(fun.y = "mean",
+               geom = "point",
+               shape = 3,
+               color = "red",
+               size = 4) +
   xlab("quality")
 
 ```
@@ -378,8 +483,13 @@ higher levels of sulphates.
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, aes(x = as.factor(quality), y = sulphates)) +
-  geom_boxplot() +
-  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  stat_summary(fun.y = "mean", 
+               geom = "point", 
+               shape = 3, 
+               color = "red",
+               size = 4) +
   xlab("quality")
 
 ```
@@ -411,8 +521,13 @@ levels of citric acid.
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, aes(x = as.factor(quality), y = citric.acid)) +
-  geom_boxplot() +
-  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  stat_summary(fun.y = "mean", 
+               geom = "point", 
+               shape = 3, 
+               color = "red",
+               size = 4) +
   xlab("quality")
 
 ```
@@ -443,8 +558,13 @@ non-experts) is not the best approach.
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, aes(x = as.factor(quality), y = density)) +
-  geom_boxplot() +
-  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  stat_summary(fun.y = "mean", 
+               geom = "point", 
+               shape = 3, 
+               color = "red",
+               size = 4) +
   xlab("quality")
 
 ```
@@ -495,27 +615,10 @@ evaluated based on properties of the other (acidity).
 
 # Multivariate Plots Section
 
-To help visualization for the next plots, I'll divide the wines on baskets, 
-based on their quality. The baskets are:
-
-* Bad: 4 or lower quality
-* Average: 5 quality
-* Good: 6 quality
-* Best: 7 or over quality
-
-The choice of breaks for the baskets are based on the fact that most 
-observations on the dataset have quality of 5 or 6.
-
-```{r echo=FALSE, warning=FALSE, message=FALSE, Multivariate_Plots}
-
-redwine$quality_factor <- cut(redwine$quality, breaks = c(0,4,5,6,10), 
-                              labels = c("Bad", "Average", "Good", "Best"))
-
-```
-
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-
-table(redwine$quality_factor)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#I decided to create this custom palette to use on my plots
+#source: https://stackoverflow.com/questions/29466239/how-to-set-the-color-range-of-scale-colour-brewer-in-ggplot2-palette-selecte
+my_palette <- brewer.pal(n = 9, "Greens")[4:7]
 
 ```
 
@@ -524,11 +627,18 @@ table(redwine$quality_factor)
 
 ggplot(data = redwine, aes(x = alcohol, y = volatile.acidity, 
                          color = quality_factor)) +
-  geom_point(position = position_jitter(width = 0.2, height = 0.01)) +
-  scale_y_continuous(breaks = seq(0,1.5,0.1), 
-                     limits = c(0, quantile(redwine$volatile.acidity, 0.99))) +
-  geom_vline(xintercept = median(redwine$alcohol), linetype = "longdash") +
-  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "dashed")
+  geom_point(position = position_jitter(width = 0.2, height = 0.01),
+             alpha = 0.75,
+             size = 1.5) +
+  geom_smooth(method = "lm", se = FALSE, size = 1.1) +
+  scale_y_continuous(breaks = seq(0, 1.5, 0.1), 
+                     limits = c(0, 
+                                quantile(redwine$volatile.acidity, 0.99))) +
+  geom_vline(xintercept = median(redwine$alcohol), 
+             linetype = "longdash") +
+  geom_hline(yintercept = median(redwine$volatile.acidity), 
+             linetype = "dashed") +
+  scale_color_manual(values = my_palette)
 
 ```
 
@@ -536,19 +646,25 @@ The top 1% values for volatile acidity were removed on this plot. The vertical
 and horizontal lines are the medians for alcohol and volatile acidity, 
 respectively. By using both lines, the graph is divided into four quadrants. 
 We can see how alcohol has a higher influence in the quality factor as most of 
-red and green dots (bad and average wines) are on the second or third 
-quadrants, where alcohol levels are lower. The first quadrant has a good number 
-of good wines but also has some presence of bad and average wines. The fourth 
-quadrant, where alcohol is high and volatile acidity is low is the best 
-quadrant, as expected: most purple dots (best wines) are present there.
+bad and average wines are on the second or third quadrants, where alcohol 
+levels are lower. The first quadrant has a good number of good wines but also 
+has some presence of bad and average wines. The fourth quadrant, where alcohol 
+is high and volatile acidity is low is the best quadrant, as expected: most 
+best wines are present there.
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, aes(x = alcohol, y = density, color = quality_factor)) +
-  geom_point(position = position_jitter(width = 0.2, height = 0.0025)) +
-  geom_hline(yintercept = median(redwine$density), linetype = "longdash") +
-  geom_vline(xintercept = median(redwine$alcohol), linetype = "longdash")
+  geom_point(position = position_jitter(width = 0.2, height = 0.0025),
+             alpha = 0.75,
+             size = 1.5) +
+  geom_smooth(method = "lm", se = FALSE, size = 1.1) +
+  geom_hline(yintercept = median(redwine$density), 
+             linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$alcohol), 
+             linetype = "longdash") +
+  scale_color_manual(values = my_palette)
 
 ```
 
@@ -562,64 +678,43 @@ a good feature for telling the quality of a wine.
 
 ggplot(data = redwine,
        aes(x = volatile.acidity, y = sulphates, color = quality_factor)) +
-  geom_point(position = position_jitter(width = 0.01, height = 0.01)) +
-  scale_y_continuous(limits = c(0.25, quantile(redwine$sulphates, 0.99))) +
-  scale_x_continuous(limits = c(0.1, quantile(redwine$volatile.acidity, 0.99))) +
-  geom_hline(yintercept = median(redwine$sulphates), linetype = "longdash") +
-  geom_vline(xintercept = median(redwine$volatile.acidity), linetype = "longdash")
+  geom_point(position = position_jitter(width = 0.01, height = 0.01),
+             alpha = 0.75,
+             size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1.1) +
+  scale_y_continuous(limits = c(0.25, 
+                                quantile(redwine$sulphates, 0.99))) +
+  scale_x_continuous(limits = c(0.1, 
+                                quantile(redwine$volatile.acidity, 0.99))) +
+  geom_hline(yintercept = median(redwine$sulphates), 
+             linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$volatile.acidity), 
+             linetype = "longdash") +
+  scale_color_manual(values = my_palette)
 
 ```
 
 This plot also has a difference between the quadrants. In this case, the second 
 quadrant (high sulphates and low volatile acidity) is where most of the best 
-wines (purple dots) are.
-
-So far, the only categorical feature in the dataset was quality, that was 
-reduced into buckets. I've noticed that having almost all the variables with 
-continuous values might conceal some interesting information. For example, is 
-there a difference in how the density affects the quality of the wine in 
-different levels of alcohol?
-
-I'll bucket wines by alcohol levels and investigate some more.
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-summary(redwine$alcohol)
-
-```
-
-A reminder of the summary for alcohol values on the dataset. The value range is 
-of 6.5 (14.9 minues 8.4). By dividing alcohol levels into three buckets, that 
-would imply in a step of around 2.16 for each bucket. I'll round it to 2.15 and 
-use that value as a step to the cut. The buckets will be cut as follows:
-
-* Low alcohol level: over 8.4% or under or equal to 9.55%
-* Medium alcohol level: over 9.55% or under or equal to 11.7%
-* High alcohol level: over 11.7%
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-redwine$alcohol_level <- cut(redwine$alcohol, breaks = c(8,9.55,11.7,15), 
-                             labels = c("Low Alcohol",
-                                        "Medium Alcohol",
-                                        "High Alcohol"))
-table(redwine$alcohol_level)
-
-```
-
-The dataset is mostly of medium alcohol levels, based on the cut parameters. 
-However, there is a reasonable number of observations for the other buckets.
+wines are.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, 
        aes(x = sulphates, y = volatile.acidity, color = quality_factor)) +
-  geom_point() +
+  geom_point(alpha = 0.75,
+             size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
   facet_wrap(~ alcohol_level) +
-  scale_x_continuous(limits = c(0.25, quantile(redwine$sulphates, 0.99))) +
-  scale_y_continuous(limits = c(0.125, quantile(redwine$volatile.acidity, 0.99))) +
-  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "longdash") +
-  geom_vline(xintercept = median(redwine$sulphates), linetype = "longdash")
+  scale_x_continuous(limits = c(0.25, 
+                                quantile(redwine$sulphates, 0.99))) +
+  scale_y_continuous(limits = c(0.125, 
+                                quantile(redwine$volatile.acidity, 0.99))) +
+  geom_hline(yintercept = median(redwine$volatile.acidity), 
+             linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$sulphates), 
+             linetype = "longdash") +
+  scale_color_manual(values = my_palette)
 
 ```
 
@@ -633,47 +728,20 @@ wines and most of the observations are on the second and third quadrants. The
 plot depicts at the same time the influence of the three features most 
 impactful on the quality of a wine.
 
-As a last exploration attempt, I'll try to also cut by density.
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-summary(redwine$density)
-
-```
-
-The variance in density levels is 0.0136. By diving in three equal steps, we've 
-got roughly 0.0045 for each step. However, the first step doesn't even surpass 
-the first quartile, and the second goes from there to beyond the third. That 
-would create a bucket with the majority of the observations. Looking to create 
-more even buckets, I'll use the values from the first quartile, median and 
-third quartile.
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-redwine$density_level <- cut(redwine$density, 
-                             breaks = c(0, 0.9956, 0.9978, 1.0038), 
-                             labels = c("Light", "Medium", "Heavy"))
-table(redwine$density_level)
-
-```
-
-The distribution seems more balanced, even with the middle bucket with almost 
-double the number of observations of the other buckets. The buckets are 
-represented in the following manner:
-
-* Light wines: up to 0.9956g/cm^3
-* Medium wines: higher than 0.9956g/cm^3 and up to 0.9978g/cm^3
-* Heavy wines: higher than 0.9978g/cm^3
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ggplot(data = redwine, 
        aes(x = alcohol, y = volatile.acidity, color = quality_factor)) +
-  geom_point() +
+  geom_point(alpha = 0.75, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
   facet_wrap(~ density_level) +
-  scale_y_continuous(limits = c(0.25, quantile(redwine$volatile.acidity, 0.99))) +
-  geom_vline(xintercept = median(redwine$alcohol), linetype = "longdash") +
-  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "longdash")
+  scale_y_continuous(limits = c(0.25, 
+                                quantile(redwine$volatile.acidity, 0.99))) +
+  geom_vline(xintercept = median(redwine$alcohol), 
+             linetype = "longdash") +
+  geom_hline(yintercept = median(redwine$volatile.acidity), 
+             linetype = "longdash") +
+  scale_color_manual(values = my_palette)
 
 ```
 
@@ -691,9 +759,9 @@ are alcohol, volatile acidity and sulphates, creating a plot with the
 relationship between them and quality efficiently described the properties of 
 a good wine.
 
-To improve the analysis, I decided to divide alcohol and density into buckets. 
-That allowed me to visualize multiple features interacting with each other at 
-the same time.
+To improve the analysis, I decided to divide quality, alcohol and density 
+into buckets. That allowed me to visualize multiple features interacting with 
+each other at the same time.
 
 A surprising interaction was found when density values were cut into buckets. 
 Even though a linear regression model suggests that low density levels are 
@@ -708,17 +776,27 @@ bucket.
 
 ggplot(data = redwine, 
        aes(x = sulphates, y = volatile.acidity, color = quality_factor)) +
-  geom_point() +
+  geom_point(alpha = 0.75, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
   facet_wrap(~ alcohol_level) +
-  scale_x_continuous(limits = c(0.25, quantile(redwine$sulphates, 0.99))) +
-  scale_y_continuous(limits = c(0.125, quantile(redwine$volatile.acidity, 0.99))) +
-  geom_hline(yintercept = median(redwine$volatile.acidity), linetype = "longdash") +
-  geom_vline(xintercept = median(redwine$sulphates), linetype = "longdash") +
-  labs(title = "Quality of a Wine, based on Acetic Acid, Potassium Sulphate and Alcohol", 
-       color = "Quality", 
-       subtitle = "Low Alcohol: up to 9.55%; Medium Alcohol: over 9.55% and up to 11.7%; High Alcohol: over 11.7%") +
+  scale_x_continuous(limits = c(0.25, 
+                                quantile(redwine$sulphates, 0.99))) +
+  scale_y_continuous(limits = c(0.125, 
+                                quantile(redwine$volatile.acidity, 0.99))) +
+  geom_hline(yintercept = median(redwine$volatile.acidity), 
+             linetype = "longdash") +
+  geom_vline(xintercept = median(redwine$sulphates), 
+             linetype = "longdash") +
+  labs(
+  title = "Wine Quality, based on Acetic Acid, Potassium Sulphate and Alcohol", 
+  color = "Quality", 
+  subtitle = "Low Alcohol: up to 9.55% 
+Medium Alcohol: over 9.55% and up to 11.7% 
+High Alcohol: over 11.7%"
+  ) +
   ylab("Acetic Acid (g/dm^3)") +
-  xlab("Potassium Sulphate (g/dm^3)")
+  xlab("Potassium Sulphate (g/dm^3)") +
+  scale_color_manual(values = my_palette)
 
 ```
 
@@ -734,17 +812,27 @@ Best.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Two}
 
-ggplot(data=redwine, 
-       aes(x=alcohol, y=volatile.acidity, color=quality_factor)) +
-  geom_point() +
+ggplot(data = redwine, 
+       aes(x = alcohol, y = volatile.acidity, color = quality_factor)) +
+  geom_point(alpha = 0.75, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
   facet_wrap(~ density_level) +
-  scale_y_continuous(limits=c(0.25, quantile(redwine$volatile.acidity, 0.99))) +
-  geom_vline(xintercept=median(redwine$alcohol), linetype="longdash") +
-  geom_hline(yintercept=median(redwine$volatile.acidity), linetype="longdash") +
-  labs(title="Quality of a Wine based on Acetic Acid, Alcohol and Density", 
-       subtitle="Light: up to 0.9956g/dm^3; Medium: over 0.9956 and up to 0.9978g/dm^3; Heavy: over 0.9978g/dm^3", color="Quality") +
+  scale_y_continuous(limits = c(0.25, 
+                              quantile(redwine$volatile.acidity, 0.99))) +
+  geom_vline(xintercept = median(redwine$alcohol), 
+             linetype = "longdash") +
+  geom_hline(yintercept = median(redwine$volatile.acidity), 
+             linetype = "longdash") +
+  labs(
+    title = "Quality of a Wine based on Acetic Acid, Alcohol and Density", 
+    subtitle = "Light: up to 0.9956g/dm^3
+Medium: over 0.9956 and up to 0.9978g/dm^3
+Heavy: over 0.9978g/dm^3", 
+    color = "Quality"
+    ) +
   xlab("Alcohol (%)") +
-  ylab("Acetic Acid (g/dm^3)")
+  ylab("Acetic Acid (g/dm^3)") +
+  scale_color_manual(values = my_palette)
 
 ```
 
@@ -759,8 +847,13 @@ are more or less the same on that regard.
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Three}
 
 ggplot(data = redwine, aes(y = alcohol, x = as.factor(quality))) +
-  geom_boxplot() +
-  stat_summary(fun.y = "mean", geom = "point", shape = 3, color = "red") +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  stat_summary(fun.y = "mean", 
+               geom = "point", 
+               shape = 3, 
+               color = "red",
+               size = 4) +
   xlab("Quality") +
   labs(title = "Variance of Alcohol Levels by Quality of the Wine", 
        subtitle = "Crosses represent mean values") +

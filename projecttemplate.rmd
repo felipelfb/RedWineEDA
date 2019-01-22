@@ -246,113 +246,219 @@ grid.arrange(hg, bp, ncol = 2)
 By doing a log transformation and removing the top 10%, the information is even 
 clearer. The distribution doesn't follow a normal distribution (there are 
 peaks on two different sections). The feature so far is the most affected by 
-outliers.
+outliers. That should be in mind when exploring its relationship with other 
+features.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = chlorides)) +
+hg <- ggplot(data = redwine, aes(x = chlorides)) +
   geom_histogram()
 
+bp <- ggplot(data = redwine, aes(y = chlorides, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
 ```
+
+Chlorides is the same as residual sugar. The number of outliers difficult the 
+visualization of the rest of the plot. On this case, I'll go straight to both 
+transforming and omitting the outliers.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = free.sulfur.dioxide)) +
-  geom_histogram()
+hg <- ggplot(data = redwine, aes(x = chlorides)) +
+  geom_histogram() +
+  scale_x_log10() +
+  scale_x_continuous(limits = c(0,
+                                quantile(redwine$chlorides, 0.95)))
+
+bp <- ggplot(data = redwine, aes(y = chlorides, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  scale_y_log10() +
+  scale_y_continuous(limits = c(0,
+                                quantile(redwine$chlorides, 0.95)))
+
+grid.arrange(hg, bp, ncol = 2)
 
 ```
+
+This time, only 5% of the higher end outliers were removed, along with the log 
+transformation. That was enough to provide a better sight onto the rest of the 
+distribution of the feature. It follows a normal distribution and has outliers 
+on both ends, with the majority of them being on the higher end.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hg <- ggplot(data = redwine, aes(x = free.sulfur.dioxide)) +
+  geom_histogram()
+
+bp <- ggplot(data = redwine, aes(y = free.sulfur.dioxide, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
+```
+
+Free sulfur dioxide has some outliers, though it is possible to identify the 
+nature of its distribution. I'll transform it with a log transformation and 
+omit the top 5% values.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hg <- ggplot(data = redwine, aes(x = free.sulfur.dioxide)) +
+  geom_histogram() +
+  scale_x_log10() +
+  scale_x_continuous(limits = c(0,
+                                quantile(redwine$free.sulfur.dioxide, 0.95)))
+
+bp <- ggplot(data = redwine, aes(y = free.sulfur.dioxide, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  scale_y_log10() +
+  scale_y_continuous(limits = c(0,
+                                quantile(redwine$free.sulfur.dioxide, 0.95)))
+
+grid.arrange(hg, bp, ncol = 2)
+
+```
+
+Now we can see that the feature doesn't follow a normal distribution, since 
+there are a lot of random peaks throughout the histogram.
 
 ```{r  echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = total.sulfur.dioxide)) +
+hg <- ggplot(data = redwine, aes(x = total.sulfur.dioxide)) +
   geom_histogram()
 
+bp <- ggplot(data = redwine, aes(y = total.sulfur.dioxide, x = 1)) +
+  geom_jitter(alpha = 0.25) + 
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
 ```
+
+For this feature, there are some observations that have values really apart 
+from the rest of the data. The rest of the data seems reasonable enough to 
+analyze, so I'll omit those heavy outliers.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = density)) +
+hg <- ggplot(data = redwine, aes(x = total.sulfur.dioxide)) +
+  geom_histogram() +
+  scale_x_continuous(limits = c(0,
+                                quantile(redwine$total.sulfur.dioxide, 0.95)))
+
+bp <- ggplot(data = redwine, aes(y = total.sulfur.dioxide, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  scale_y_continuous(limits = c(0,
+                                quantile(redwine$total.sulfur.dioxide, 0.95)))
+
+grid.arrange(hg, bp, ncol = 2)
+
+```
+
+After omitting the top 5%, it is easier to identify other properties of the 
+distribution, such as the mean, where most of the values are concentrated, etc.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hg <- ggplot(data = redwine, aes(x = density)) +
   geom_histogram()
 
+bp <- ggplot(data = redwine, aes(y = density, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
 ```
+
+Density is a feature with a normal distribution and outliers on both ends. Most 
+of the values are between 0.995 and 0.9975. Despite the outliers, the plots 
+look easy to analyse.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = pH)) +
+hg <- ggplot(data = redwine, aes(x = pH)) +
   geom_histogram()
 
+bp <- ggplot(data = redwine, aes(y = pH, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
 ```
+
+As with density, pH has a few outliers on both ends but that doesn't difficult 
+visualization that much. The distribution is normal, with most of the values
+between 3 and 3.5.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = sulphates)) +
+hg <- ggplot(data = redwine, aes(x = sulphates)) +
   geom_histogram()
 
+bp <- ggplot(data = redwine, aes(y = sulphates, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
 ```
+
+Sulphates as a feature seems to have a normal distribution, but it also holds a 
+lot of outliers on the top end. It might be necessary to omit some of those 
+on later plots.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = alcohol)) +
+hg <- ggplot(data = redwine, aes(x = sulphates)) +
+  geom_histogram() +
+  scale_x_continuous(limits = c(0,
+                                quantile(redwine$sulphates, 0.99)))
+
+bp <- ggplot(data = redwine, aes(y = sulphates, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  scale_y_continuous(limits = c(0,
+                                quantile(redwine$sulphates, 0.99)))
+
+grid.arrange(hg, bp, ncol = 2)
+
+```
+
+Omitting the top 1% gives a better view of the distribution, even with a few 
+outliers remaining. Most of the observations are within the values of 0.5 and 
+0.75.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hg <- ggplot(data = redwine, aes(x = alcohol)) +
   geom_histogram()
 
-```
+bp <- ggplot(data = redwine, aes(y = alcohol, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
 
-These histograms help us visualize how some of the features on the dataset have 
-outliers, given that some of them are right tailed. Chlorides is a good example 
-of this characteristic. Most of the data is around 0.05 and 0.15, with very 
-few examples of wine going up to 6.
-
-Also, most of the data is relatively normal, with the exception of citric acid.
-
-Let's transform some of the features using a log scale to try and get better 
-visualizations of them. Suitable choices would be residual sugar, chlorides, 
-free sulfur dioxide, total sulfur dioxide, and sulphates.
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-ggplot(data = redwine, aes(x = residual.sugar)) +
-  geom_histogram() +
-  scale_x_log10()
+grid.arrange(hg, bp, ncol = 2)
 
 ```
 
+Most of the wines have values of alcohol between 9 and 11. Around 25% of the 
+observations are over 11. The distribution seems relatively normal.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-ggplot(data=redwine, aes(x = chlorides)) +
-  geom_histogram() +
-  scale_x_log10()
-
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-ggplot(data = redwine, aes(x = free.sulfur.dioxide)) +
-  geom_histogram() +
-  scale_x_log10()
-
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-ggplot(data = redwine, aes(x = total.sulfur.dioxide)) +
-  geom_histogram() +
-  scale_x_log10()
-
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-ggplot(data = redwine, aes(x = sulphates)) +
-  geom_histogram() +
-  scale_x_log10()
-
-```
-
-
-With log transformation it is easier to identify patterns on these features. 
-With the exception of free sulfur dioxide, they all have normal-like 
-distributions.
+These histograms and boxplots help us visualize how some of the features on the 
+dataset have outliers, given that some of them are right tailed. Chlorides is a 
+good example of this characteristic. Most of the data is around 0.05 and 0.15, 
+with very few examples of wine going up to 6. Also, most of the data is 
+relatively normal, with the exception of citric acid.
 
 For some of the features it might be useful to divide them into buckets. For 
 quality, reducing the various possible values into buckets helps plot 
@@ -484,7 +590,10 @@ ones or if there is some possible feature worth considering.
 
 ```{r echo=FALSE, Bivariate_Plots}
 
-cor(subset(redwine, select = -c(X)))
+cor(subset(redwine, select = -c(X, 
+                                alcohol_level, 
+                                density_level, 
+                                quality_factor)))
 
 ```
 

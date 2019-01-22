@@ -118,43 +118,135 @@ table(redwine$quality)
 Out of 1599 wines, 63 (~4%) are of quality 3 or 4, 1319 (~82.5%) are of quality 
 5 or 6 and 217 (~13,6%) are of quality 7 or 8.
 
-Histograms will help visualize distribution patterns for the other features
-as well.
+Histograms and boxplots will help visualize distribution patterns for the other 
+features as well.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-ggplot(data = redwine, aes(x = quality)) +
+hg <- ggplot(data = redwine, aes(x = quality)) +
   geom_histogram()
+
+bp <- ggplot(data = redwine, aes(y = quality, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol=2)
+
 
 ```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+We can easily see the difference between number of observations for the values 
+of quality. Despite that, the distribution is normal and there aren't a lot of 
+outliers on the feature.
 
-ggplot(data = redwine, aes(x = fixed.acidity)) +
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+hg <- ggplot(data = redwine, aes(x = fixed.acidity)) +
   geom_histogram()
+
+bp <- ggplot(data = redwine, aes(y = fixed.acidity, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
 
 ```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-ggplot(data = redwine, aes(x = volatile.acidity)) +
-  geom_histogram()
-
-```
+Fixed acidity has a more sparse distribution, although still normal-like. There 
+are a higher number of outliers on the higher end, however. These could either 
+be removed or omitted on future plots.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = citric.acid)) +
+hg <- ggplot(data = redwine, aes(x = volatile.acidity)) +
   geom_histogram()
 
+bp <- ggplot(data = redwine, aes(y = volatile.acidity, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
 ```
+
+Volatile acidity has a similar distribution as fixed acidity, but with less 
+outliers on the higher end. Again, this could be either removed completely or 
+omitted on future plots.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-ggplot(data = redwine, aes(x = residual.sugar)) +
+hg <- ggplot(data = redwine, aes(x = citric.acid)) +
   geom_histogram()
 
+bp <- ggplot(data = redwine, aes(y = citric.acid, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
 ```
+
+Citric acid has the most disperse distribution so far. The boxplot sections are 
+larger and there are almost no outliers. However, the data does not follow a 
+normal distribution.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hg <- ggplot(data = redwine, aes(x = residual.sugar)) +
+  geom_histogram()
+
+bp <- ggplot(data = redwine, aes(y = residual.sugar, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue")
+
+grid.arrange(hg, bp, ncol = 2)
+
+```
+
+Residual sugar has a very large number of outliers. So much that it is hard to 
+do a proper analysis on these plots. To solve this, we could either transform 
+the feature with a log of square root transformation, and/or remove or omit the 
+outliers.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hg <- ggplot(data = redwine, aes(x = residual.sugar)) +
+  geom_histogram() +
+  scale_x_log10()
+
+bp <- ggplot(data = redwine, aes(y = residual.sugar, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  scale_y_log10()
+
+grid.arrange(hg, bp, ncol = 2)
+
+```
+
+With a log transformation, it is easier to understand the distribution of the 
+feature, but there's still a lot of outliers difficulting the process.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hg <- ggplot(data = redwine, aes(x = residual.sugar)) +
+  geom_histogram() +
+  scale_x_log10() +
+  scale_x_continuous(limits = c(0.5,
+                                quantile(redwine$residual.sugar, 0.9)))
+
+bp <- ggplot(data = redwine, aes(y = residual.sugar, x = 1)) +
+  geom_jitter(alpha = 0.25) +
+  geom_boxplot(alpha = 0.5, color = "blue") +
+  scale_y_log10() +
+  scale_y_continuous(limits = c(0.5,
+                                quantile(redwine$residual.sugar, 0.9)))
+
+grid.arrange(hg, bp, ncol = 2)
+
+```
+
+By doing a log transformation and removing the top 10%, the information is even 
+clearer. The distribution doesn't follow a normal distribution (there are 
+peaks on two different sections). The feature so far is the most affected by 
+outliers.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
